@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Chấm Điểm Dự Án STEAM Ngữ Văn 12 – Lớp 12A17</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Tùy chỉnh thanh trượt cảm ứng to, mượt trên điện thoại */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #b91c1c;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(185, 28, 28, 0.4);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:active {
+      transform: scale(1.18);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #b91c1c;
+      border: 3px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(185, 28, 28, 0.4);
+      cursor: pointer;
+    }
+
+    /* Ẩn thanh cuộn ngang nhưng vẫn vuốt mượt */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Hiệu ứng chuyển tab mượt */
+    .tab-pane {
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="pb-32 md:pb-16">
+
+  <!-- HEADER CỐ ĐỊNH -->
+  <header class="bg-gradient-to-r from-stone-900 via-red-950 to-stone-900 text-white sticky top-0 z-40 shadow-md">
+    <div class="max-w-4xl mx-auto px-4 py-3.5 flex items-center justify-between gap-3">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+            Lớp 12A17 • THPT Lương Văn Can
+          </span>
+        </div>
+        <h1 class="text-base sm:text-lg font-extrabold tracking-tight mt-1 leading-snug text-stone-50">
+          CHẤM ĐIỂM & NHẬN XÉT DỰ ÁN STEAM NGỮ VĂN 12
+        </h1>
+        <p class="text-xs text-stone-300 mt-0.5 hidden sm:block">
+          Chủ đề: Chuyển thể tác phẩm văn học Thành phố Hồ Chí Minh (05 Nhóm)
+        </p>
+      </div>
+      <div class="text-right shrink-0">
+        <div class="bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-xl border border-white/15">
+          <p class="text-[11px] text-stone-300">Tổng phiếu</p>
+          <p id="header-total-ballots" class="text-lg font-extrabold text-amber-400 leading-none mt-0.5">0</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- THANH ĐIỀU HƯỚNG TAB TRÊN DESKTOP / TABLET -->
+    <nav class="hidden md:block bg-stone-900/90 border-t border-white/10">
+      <div class="max-w-4xl mx-auto px-4 flex gap-2">
+        <button onclick="switchTab('score')" id="desk-tab-score" class="desk-tab-btn px-5 py-3 text-sm font-semibold border-b-2 border-amber-400 text-amber-400 flex items-center gap-2 transition">
+          <i class="fa-solid fa-pen-to-square"></i> 1. Chấm điểm nhóm
+        </button>
+        <button onclick="switchTab('results')" id="desk-tab-results" class="desk-tab-btn px-5 py-3 text-sm font-semibold border-b-2 border-transparent text-stone-300 hover:text-white flex items-center gap-2 transition">
+          <i class="fa-solid fa-chart-column"></i> 2. Kết quả & Nhận xét AI
+        </button>
+        <button onclick="switchTab('history')" id="desk-tab-history" class="desk-tab-btn px-5 py-3 text-sm font-semibold border-b-2 border-transparent text-stone-300 hover:text-white flex items-center gap-2 transition">
+          <i class="fa-solid fa-clock-rotate-left"></i> 3. Lịch sử phiếu (<span id="desk-history-count">0</span>)
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- NỘI DUNG CHÍNH -->
+  <main class="max-w-4xl mx-auto px-3 sm:px-4 pt-4">
+
+    <!-- ========================================================= -->
+    <!-- TAB 1: CHẤM ĐIỂM TỪNG NHÓM ĐỘC LẬP                        -->
+    <!-- ========================================================= -->
+    <section id="pane-score" class="tab-pane space-y-4">
+
+      <!-- BƯỚC 1: CHỌN NGƯỜI CHẤM -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-red-700 text-white text-xs flex items-center justify-center font-bold">1</span>
+            Vai trò người đánh giá
+          </h2>
+          <!-- Tùy chọn hệ số x2 cho GV -->
+          <label class="inline-flex items-center gap-2 cursor-pointer bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg">
+            <input type="checkbox" id="teacher-weight-toggle" onchange="toggleTeacherWeight()" class="w-4 h-4 accent-red-700 rounded">
+            <span class="text-xs font-semibold text-amber-900">Hệ số x2 điểm GV</span>
+          </label>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2" id="evaluator-selector">
+          <button type="button" onclick="selectEvaluator('GV')" data-eval="GV" class="eval-btn min-h-[46px] px-3 py-2 rounded-xl border-2 border-red-700 bg-red-50 text-red-900 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition">
+            <i class="fa-solid fa-user-tie text-red-700"></i> Giáo viên / BGK
+          </button>
+          <button type="button" onclick="selectEvaluator('G1')" data-eval="G1" class="eval-btn min-h-[46px] px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition">
+            Đại diện Nhóm 1
+          </button>
+          <button type="button" onclick="selectEvaluator('G2')" data-eval="G2" class="eval-btn min-h-[46px] px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition">
+            Đại diện Nhóm 2
+          </button>
+          <button type="button" onclick="selectEvaluator('G3')" data-eval="G3" class="eval-btn min-h-[46px] px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition">
+            Đại diện Nhóm 3
+          </button>
+          <button type="button" onclick="selectEvaluator('G4')" data-eval="G4" class="eval-btn min-h-[46px] px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition">
+            Đại diện Nhóm 4
+          </button>
+          <button type="button" onclick="selectEvaluator('G5')" data-eval="G5" class="eval-btn min-h-[46px] px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition">
+            Đại diện Nhóm 5
+          </button>
+        </div>
+      </div>
+
+      <!-- BƯỚC 2: CHỌN NHÓM ĐƯỢC CHẤM -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-red-700 text-white text-xs flex items-center justify-center font-bold">2</span>
+            Chọn nhóm được chấm điểm
+          </h2>
+          <span class="text-[11px] text-slate-500 italic">Khóa tự chấm nhóm mình</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="target-group-selector">
+          <!-- Render bằng JS -->
+        </div>
+
+        <!-- Tên tác phẩm TP.HCM (tùy chọn) -->
+        <div class="mt-3.5 pt-3.5 border-t border-slate-100">
+          <label for="work-title-input" class="block text-xs font-semibold text-slate-600 mb-1.5">
+            Tên tác phẩm văn học TP.HCM chuyển thể (tự động lưu theo nhóm):
+          </label>
+          <input type="text" id="work-title-input" placeholder="Ví dụ: Mùa len trâu (Sơn Nam), Bông áo cưới (Bình Nguyên Lộc)..." class="w-full min-h-[44px] px-3.5 py-2 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:border-red-700 focus:bg-white transition">
+        </div>
+      </div>
+
+      <!-- BƯỚC 3: CHẤM ĐIỂM 5 TIÊU CHÍ RUBRIC (100 ĐIỂM) -->
+      <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200 space-y-5">
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+          <h2 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-red-700 text-white text-xs flex items-center justify-center font-bold">3</span>
+            Chấm điểm theo Rubric (Thang 100)
+          </h2>
+          <button type="button" onclick="resetSlidersToDefault()" class="text-xs font-semibold text-slate-500 hover:text-red-700 px-2.5 py-1.5 rounded-lg bg-slate-100">
+            <i class="fa-solid fa-rotate-left mr-1"></i>Đặt lại mức Tốt
+          </button>
+        </div>
+
+        <!-- Container 5 tiêu chí -->
+        <div id="criteria-sliders-container" class="space-y-5">
+          <!-- Render bằng JS -->
+        </div>
+
+        <!-- Ô ghi chú nhanh -->
+        <div class="pt-2 border-t border-slate-100">
+          <label for="ballot-note-input" class="block text-xs font-semibold text-slate-600 mb-1.5">
+            Ghi chú / Góp ý nhanh cho nhóm (tùy chọn):
+          </label>
+          <textarea id="ballot-note-input" rows="2" placeholder="Nhập điểm ấn tượng hoặc góp ý chỉnh sửa..." class="w-full px-3.5 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:border-red-700 focus:bg-white transition"></textarea>
+        </div>
+
+        <!-- Nút lưu trên Desktop -->
+        <div class="hidden md:flex items-center justify-between bg-stone-900 text-white p-4 rounded-2xl">
+          <div>
+            <p class="text-xs text-stone-300">Tổng điểm phiếu hiện tại (<span id="desk-target-label" class="text-amber-400 font-bold">Nhóm 1</span>):</p>
+            <div class="flex items-baseline gap-3 mt-0.5">
+              <span id="desk-live-total" class="text-3xl font-extrabold text-amber-400">80.0</span>
+              <span class="text-sm text-stone-300">/ 100 điểm</span>
+              <span class="text-sm bg-white/15 px-2.5 py-0.5 rounded-lg font-semibold text-emerald-300">
+                Quy đổi: <span id="desk-live-ten">8.00</span> / 10
+              </span>
+            </div>
+          </div>
+          <button type="button" onclick="submitBallot()" class="min-h-[50px] px-6 py-3 bg-red-600 hover:bg-red-500 active:scale-95 text-white font-bold rounded-xl shadow-lg flex items-center gap-2 transition">
+            <i class="fa-solid fa-check-circle text-lg"></i> LƯU PHIẾU CHẤM ĐIỂM
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 2: KẾT QUẢ TỔNG HỢP, BIỂU ĐỒ & NHẬN XÉT TỰ ĐỘNG       -->
+    <!-- ========================================================= -->
+    <section id="pane-results" class="tab-pane hidden space-y-4">
+
+      <!-- Thẻ tổng quan nhanh -->
+      <div class="grid grid-cols-2 gap-3">
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+          <p class="text-xs font-semibold text-slate-500 uppercase">Tổng số phiếu chấm</p>
+          <p id="stat-total-ballots" class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">0</p>
+          <p id="stat-weight-info" class="text-[11px] text-slate-500 mt-1">Tính trung bình cộng</p>
+        </div>
+        <div class="bg-gradient-to-br from-amber-50 to-orange-50 p-4 rounded-2xl shadow-sm border border-amber-200">
+          <p class="text-xs font-semibold text-amber-800 uppercase flex items-center gap-1">
+            <i class="fa-solid fa-trophy text-amber-600"></i> Dẫn đầu hiện tại
+          </p>
+          <p id="stat-leading-group" class="text-base sm:text-lg font-extrabold text-red-800 mt-1 truncate">Chưa có dữ liệu</p>
+          <p id="stat-leading-score" class="text-xs font-bold text-amber-900 mt-0.5">-- / 100 điểm</p>
+        </div>
+      </div>
+
+      <!-- Biểu đồ cột so sánh 05 nhóm -->
+      <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-chart-simple text-red-700"></i> Biểu đồ So sánh Điểm Trung bình (Thang 100)
+          </h2>
+        </div>
+        <div id="bar-chart-container" class="space-y-3">
+          <!-- Render bằng JS -->
+        </div>
+      </div>
+
+      <!-- Thanh công cụ dữ liệu & Xuất Excel -->
+      <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-2">
+        <button type="button" onclick="exportToCSV()" class="flex-1 sm:flex-none min-h-[44px] px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white text-xs sm:text-sm font-bold rounded-xl flex items-center justify-center gap-2 transition">
+          <i class="fa-solid fa-file-excel"></i> Xuất file CSV (Excel)
+        </button>
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button type="button" onclick="openConfirmModal('demo')" class="flex-1 sm:flex-none min-h-[44px] px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i> Dữ liệu mẫu
+          </button>
+          <button type="button" onclick="openConfirmModal('clear')" class="flex-1 sm:flex-none min-h-[44px] px-3.5 py-2 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-semibold rounded-xl flex items-center justify-center gap-1.5 transition">
+            <i class="fa-solid fa-trash-can"></i> Xóa tất cả
+          </button>
+        </div>
+      </div>
+
+      <!-- Danh sách thẻ kết quả xếp hạng & Nhận xét tự động từng nhóm -->
+      <div class="space-y-3.5" id="group-results-cards">
+        <!-- Render bằng JS -->
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 3: LỊCH SỬ PHIẾU CHẤM                                 -->
+    <!-- ========================================================= -->
+    <section id="pane-history" class="tab-pane hidden space-y-3">
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+        <div>
+          <h2 class="text-sm sm:text-base font-bold text-slate-800">Danh sách Phiếu chấm đã lưu</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Kiểm tra hoặc xóa từng phiếu nếu nhập nhầm điểm</p>
+        </div>
+        <span id="history-badge-count" class="bg-slate-100 text-slate-800 text-xs font-bold px-3 py-1.5 rounded-full">0 phiếu</span>
+      </div>
+
+      <div id="history-list-container" class="space-y-2.5">
+        <!-- Render bằng JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- THANH TỔNG ĐIỂM NỔI & MENU DƯỚI CÙNG CHO ĐIỆN THOẠI       -->
+  <!-- ========================================================= -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
+    <!-- Thanh tổng điểm nổi (Chỉ hiện khi đang ở Tab 1: Chấm điểm) -->
+    <div id="mobile-sticky-score-bar" class="bg-stone-900 text-white px-3.5 py-2.5 flex items-center justify-between gap-2">
+      <div>
+        <div class="flex items-center gap-1.5">
+          <span id="mob-target-label" class="text-xs font-bold text-amber-400">Nhóm 1</span>
+          <span class="text-[11px] text-stone-400">• Tổng điểm:</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="mob-live-total" class="text-2xl font-extrabold text-white leading-none">80.0</span>
+          <span class="text-xs text-stone-300">/100</span>
+          <span class="text-xs font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded">
+            <span id="mob-live-ten">8.00</span>đ
+          </span>
+        </div>
+      </div>
+      <button type="button" onclick="submitBallot()" class="min-h-[44px] px-4 py-2 bg-red-600 active:bg-red-700 text-white text-xs font-extrabold rounded-xl shadow flex items-center gap-1.5 shrink-0">
+        <i class="fa-solid fa-check-circle"></i> LƯU PHIẾU
+      </button>
+    </div>
+
+    <!-- 3 Tab điều hướng ngón tay cái -->
+    <div class="grid grid-cols-3 bg-white">
+      <button type="button" onclick="switchTab('score')" id="mob-tab-score" class="mob-tab-btn py-2.5 flex flex-col items-center justify-center gap-1 text-red-700 font-bold text-[11px]">
+        <i class="fa-solid fa-pen-to-square text-base"></i>
+        <span>Chấm điểm</span>
+      </button>
+      <button type="button" onclick="switchTab('results')" id="mob-tab-results" class="mob-tab-btn py-2.5 flex flex-col items-center justify-center gap-1 text-slate-500 font-medium text-[11px]">
+        <i class="fa-solid fa-chart-column text-base"></i>
+        <span>Kết quả & AI</span>
+      </button>
+      <button type="button" onclick="switchTab('history')" id="mob-tab-history" class="mob-tab-btn py-2.5 flex flex-col items-center justify-center gap-1 text-slate-500 font-medium text-[11px] relative">
+        <i class="fa-solid fa-clock-rotate-left text-base"></i>
+        <span>Lịch sử (<span id="mob-history-count">0</span>)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- HỘP THOẠI XÁC NHẬN TÙY CHỈNH (THAY THẾ CONFIRM/ALERT)     -->
+  <!-- ========================================================= -->
+  <div id="custom-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-xl border border-slate-200">
+      <div class="flex items-center gap-3 mb-3">
+        <div id="modal-icon-box" class="w-10 h-10 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+          <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+        </div>
+        <h3 id="modal-title" class="text-base font-bold text-slate-900">Xác nhận thao tác</h3>
+      </div>
+      <p id="modal-message" class="text-sm text-slate-600 leading-relaxed mb-5">
+        Bạn có chắc chắn muốn thực hiện thao tác này?
+      </p>
+      <div class="flex items-center justify-end gap-2.5">
+        <button type="button" onclick="closeConfirmModal()" class="min-h-[44px] px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold">
+          Hủy bỏ
+        </button>
+        <button type="button" id="modal-confirm-btn" class="min-h-[44px] px-4 py-2 rounded-xl bg-red-700 hover:bg-red-600 text-white text-sm font-bold">
+          Đồng ý
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- THÔNG BÁO TOAST NỔI                                       -->
+  <!-- ========================================================= -->
+  <div id="toast-notification" class="fixed top-16 left-1/2 -translate-x-1/2 z-50 hidden bg-stone-900 text-white text-xs sm:text-sm font-semibold px-4 py-3 rounded-xl shadow-lg border border-white/15 flex items-center gap-2.5 max-w-[92vw]">
+    <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+    <span id="toast-text">Đã lưu phiếu chấm thành công!</span>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- LOGIC JAVASCRIPT                                          -->
+  <!-- ========================================================= -->
+  <script>
+    // 1. DỮ LIỆU CẤU HÌNH 05 NHÓM LỚP 12A17
+    const GROUPS = [
+      {
+        id: 'G1',
+        shortName: 'Nhóm 1',
+        name: 'Nhóm 1: Tranh vẽ nghệ thuật',
+        type: 'Tranh vẽ nghệ thuật',
+        icon: 'fa-palette',
+        artStrength: 'ngôn ngữ hội họa, bố cục đường nét và phối màu biểu cảm',
+        artImprove: 'chiều sâu thị giác, sự hài hòa giữa mảng chính – phụ và sắc thái biểu cảm của đường nét'
+      },
+      {
+        id: 'G2',
+        shortName: 'Nhóm 2',
+        name: 'Nhóm 2: Múa rối',
+        type: 'Múa rối (rối bóng / rối que / rối tay)',
+        icon: 'fa-masks-theater',
+        artStrength: 'kỹ thuật chế tác con rối, cơ chế khớp chuyển động và hiệu ứng ánh sáng – bóng đổ sân khấu',
+        artImprove: 'độ linh hoạt của khớp điều khiển con rối, sự ăn khớp giữa động tác rối với lời thoại và góc chiếu sáng'
+      },
+      {
+        id: 'G3',
+        shortName: 'Nhóm 3',
+        name: 'Nhóm 3: Mô hình sa bàn 3D',
+        type: 'Mô hình sa bàn 3D',
+        icon: 'fa-cubes',
+        artStrength: 'tính toán tỷ lệ kiến trúc không gian, kết cấu vật liệu tái chế và bố trí ánh sáng đèn LED',
+        artImprove: 'độ tinh xảo của các chi tiết tạo hình thu nhỏ, độ chắc chắn kết cấu và hiệu ứng ánh sáng tạo chiều sâu'
+      },
+      {
+        id: 'G4',
+        shortName: 'Nhóm 4',
+        name: 'Nhóm 4: Nghệ thuật tổng hợp 1',
+        type: 'Nghệ thuật tổng hợp 1 (Ca múa kịch / Nhạc kịch)',
+        icon: 'fa-music',
+        artStrength: 'sự hòa quyện giữa diễn xuất kịch tính, giai điệu âm nhạc và vũ đạo sân khấu',
+        artImprove: 'nhịp điệu chuyển cảnh giữa ca – múa – kịch, đài từ nhân vật và sự đồng đều trong đội hình biểu diễn'
+      },
+      {
+        id: 'G5',
+        shortName: 'Nhóm 5',
+        name: 'Nhóm 5: Nghệ thuật tổng hợp 2',
+        type: 'Nghệ thuật tổng hợp 2 (Hát múa kết hợp kịch nói)',
+        icon: 'fa-microphone-lines',
+        artStrength: 'kết hợp nhuần nhuyễn hát múa nghệ thuật với hành động kịch giàu cảm xúc',
+        artImprove: 'sự liền mạch trong kịch bản chuyển thể, âm lượng giọng hát/lời thoại và khả năng làm chủ sân khấu'
+      }
+    ];
+
+    // 2. CẤU TRÚC 05 TIÊU CHÍ RUBRIC (TỔNG 100 ĐIỂM)
+    const CRITERIA = [
+      {
+        id: 'tc1',
+        code: 'TC1',
+        name: 'Giá trị Chuyển thể Văn học & Bản sắc TP.HCM',
+        desc: 'Bám sát nguyên tác, chuyển dịch sáng tạo sang ngôn ngữ mới, làm nổi bật văn hóa & con người TP.HCM.',
+        max: 35,
+        defaultVal: 28,
+        strengthPhrase: 'khả năng giải mã sâu sắc "linh hồn" nguyên tác, làm bật lên hơi thở văn hóa và vẻ đẹp con người Thành phố Hồ Chí Minh',
+        improvePhrase: 'việc khai thác chiều sâu tư tưởng của nguyên tác văn học và làm rõ nét đặc trưng vùng đất Sài Gòn – TP.HCM'
+      },
+      {
+        id: 'tc2',
+        code: 'TC2',
+        name: 'Chất lượng Nghệ thuật & Kỹ thuật STEAM',
+        desc: 'Tính thẩm mỹ, tỷ lệ hình học, ánh sáng, âm thanh, vật liệu tái chế và kỹ năng tạo hình/biểu diễn.',
+        max: 30,
+        defaultVal: 24,
+        strengthPhrase: 'chất lượng tạo hình và kỹ thuật STEAM ấn tượng, vận dụng nhuần nhuyễn ',
+        improvePhrase: 'chất lượng nghệ thuật và kỹ thuật STEAM, đặc biệt là '
+      },
+      {
+        id: 'tc3',
+        code: 'TC3',
+        name: 'Ứng dụng Công nghệ số, AI & Bản quyền',
+        desc: 'Khai thác AI hợp lý, kiểm chứng thông tin, tích hợp mã QR/hồ sơ số và tuân thủ Luật SHTT.',
+        max: 15,
+        defaultVal: 12,
+        strengthPhrase: 'tư duy làm chủ công nghệ số và GenAI minh bạch, tích hợp mã QR mượt mà và tuân thủ nghiêm túc Luật Sở hữu trí tuệ',
+        improvePhrase: 'việc ứng dụng công cụ số, hoàn thiện Nhật ký sử dụng AI (AI Logbook) và đối chiếu kiểm chứng thông tin'
+      },
+      {
+        id: 'tc4',
+        code: 'TC4',
+        name: 'Thuyết trình & Phản biện Báo cáo',
+        desc: 'Trình bày tự tin, mạch lạc ý đồ nghệ thuật và trả lời thuyết phục câu hỏi phản biện.',
+        max: 10,
+        defaultVal: 8,
+        strengthPhrase: 'phong thái thuyết trình tự tin, mạch lạc, lý giải thuyết phục ý đồ nghệ thuật và phản biện sắc bén',
+        improvePhrase: 'kỹ năng thuyết trình trực quan, kết nối chặt chẽ giữa sản phẩm với nguyên tác và sự chủ động khi phản biện'
+      },
+      {
+        id: 'tc5',
+        code: 'TC5',
+        name: 'Hợp tác nhóm & Hồ sơ quá trình',
+        desc: 'Phân công đồng đều giữa các thành viên, hồ sơ Google Drive đầy đủ PHT 1, PHT 2, PHT 3.',
+        max: 10,
+        defaultVal: 8,
+        strengthPhrase: 'tinh thần hợp tác nhóm đồng đều, phân công khoa học và hồ sơ học tập số trên Google Drive chỉn chu',
+        improvePhrase: 'sự phối hợp đồng đều giữa các ban chuyên môn và tính đầy đủ của minh chứng quá trình trên Google Drive'
+      }
+    ];
+
+    // 3. TRẠNG THÁI ỨNG DỤNG (STATE)
+    const STORAGE_KEY_BALLOTS = 'steam_van12_12a17_ballots_v1';
+    const STORAGE_KEY_WORKS = 'steam_van12_12a17_works_v1';
+    const STORAGE_KEY_WEIGHT = 'steam_van12_12a17_weight_v1';
+
+    let ballots = [];
+    let groupWorks = {}; // Lưu tên tác phẩm theo từng nhóm
+    let teacherWeightX2 = false;
+    let currentEvaluator = 'GV';
+    let currentTargetGroup = 'G1';
+    let currentScores = {};
+    let pendingModalAction = null;
+
+    // 4. KHỞI TẠO ỨNG DỤNG KHI TẢI TRANG
+    window.onload = function () {
+      loadFromStorage();
+      renderTargetGroupButtons();
+      renderCriteriaSliders();
+      resetSlidersToDefault(false);
+      updateEvaluatorUI();
+      updateTargetGroupUI();
+      updateAllViews();
+    };
+
+    function loadFromStorage() {
+      try {
+        const savedBallots = localStorage.getItem(STORAGE_KEY_BALLOTS);
+        if (savedBallots) ballots = JSON.parse(savedBallots);
+
+        const savedWorks = localStorage.getItem(STORAGE_KEY_WORKS);
+        if (savedWorks) groupWorks = JSON.parse(savedWorks);
+
+        const savedWeight = localStorage.getItem(STORAGE_KEY_WEIGHT);
+        if (savedWeight === 'true') {
+          teacherWeightX2 = true;
+          document.getElementById('teacher-weight-toggle').checked = true;
+        }
+      } catch (e) {
+        console.error('Lỗi đọc dữ liệu LocalStorage:', e);
+      }
+    }
+
+    function saveToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY_BALLOTS, JSON.stringify(ballots));
+        localStorage.setItem(STORAGE_KEY_WORKS, JSON.stringify(groupWorks));
+        localStorage.setItem(STORAGE_KEY_WEIGHT, String(teacherWeightX2));
+      } catch (e) {
+        console.error('Lỗi lưu dữ liệu LocalStorage:', e);
+      }
+    }
+
+    // 5. CHUYỂN ĐỔI TAB (MOBILE & DESKTOP)
+    function switchTab(tabName) {
+      // Ẩn tất cả tab pane
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.getElementById(`pane-${tabName}`).classList.remove('hidden');
+
+      // Cập nhật nút Desktop
+      document.querySelectorAll('.desk-tab-btn').forEach(btn => {
+        btn.classList.remove('border-amber-400', 'text-amber-400');
+        btn.classList.add('border-transparent', 'text-stone-300');
+      });
+      const activeDeskBtn = document.getElementById(`desk-tab-${tabName}`);
+      if (activeDeskBtn) {
+        activeDeskBtn.classList.remove('border-transparent', 'text-stone-300');
+        activeDeskBtn.classList.add('border-amber-400', 'text-amber-400');
+      }
+
+      // Cập nhật nút Mobile
+      document.querySelectorAll('.mob-tab-btn').forEach(btn => {
+        btn.classList.remove('text-red-700', 'font-bold');
+        btn.classList.add('text-slate-500', 'font-medium');
+      });
+      const activeMobBtn = document.getElementById(`mob-tab-${tabName}`);
+      if (activeMobBtn) {
+        activeMobBtn.classList.remove('text-slate-500', 'font-medium');
+        activeMobBtn.classList.add('text-red-700', 'font-bold');
+      }
+
+      // Ẩn/hiện thanh tổng điểm nổi trên mobile
+      const stickyBar = document.getElementById('mobile-sticky-score-bar');
+      if (tabName === 'score') {
+        stickyBar.classList.remove('hidden');
+      } else {
+        stickyBar.classList.add('hidden');
+      }
+
+      // Cập nhật lại số liệu nếu sang tab kết quả hoặc lịch sử
+      if (tabName === 'results') renderResultsTab();
+      if (tabName === 'history') renderHistoryTab();
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 6. XỬ LÝ CHỌN NGƯỜI CHẤM & NHÓM ĐƯỢC CHẤM
+    function toggleTeacherWeight() {
+      teacherWeightX2 = document.getElementById('teacher-weight-toggle').checked;
+      saveToStorage();
+      renderResultsTab();
+      showToast(teacherWeightX2 ? 'Đã bật tính hệ số x2 cho điểm Giáo viên' : 'Đã chuyển về tính trung bình cộng đều');
+    }
+
+    function selectEvaluator(evalId) {
+      currentEvaluator = evalId;
+      updateEvaluatorUI();
+
+      // Nếu người chấm trùng với nhóm đang chọn chấm -> tự động chuyển sang nhóm hợp lệ đầu tiên
+      if (currentEvaluator === currentTargetGroup) {
+        const firstAvailable = GROUPS.find(g => g.id !== currentEvaluator);
+        if (firstAvailable) {
+          selectTargetGroup(firstAvailable.id);
+        }
+      } else {
+        updateTargetGroupUI();
+      }
+    }
+
+    function updateEvaluatorUI() {
+      document.querySelectorAll('.eval-btn').forEach(btn => {
+        const isSelected = btn.getAttribute('data-eval') === currentEvaluator;
+        if (isSelected) {
+          btn.className = 'eval-btn min-h-[46px] px-3 py-2 rounded-xl border-2 border-red-700 bg-red-50 text-red-900 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-xs';
+        } else {
+          btn.className = 'eval-btn min-h-[46px] px-3 py-2 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 font-semibold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition';
+        }
+      });
+    }
+
+    function renderTargetGroupButtons() {
+      const container = document.getElementById('target-group-selector');
+      container.innerHTML = GROUPS.map(g => `
+        <button type="button" onclick="selectTargetGroup('${g.id}')" data-target="${g.id}"
+          class="target-btn min-h-[54px] px-3.5 py-2.5 rounded-xl border text-left flex items-center justify-between gap-2 transition">
+          <div class="flex items-center gap-2.5 min-w-0">
+            <div class="target-icon w-9 h-9 rounded-lg flex items-center justify-center shrink-0">
+              <i class="fa-solid ${g.icon}"></i>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs sm:text-sm font-bold truncate">${g.name}</p>
+              <p class="target-sub text-[11px] truncate">${g.type}</p>
+            </div>
+          </div>
+          <span class="target-badge text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0"></span>
+        </button>
+      `).join('');
+    }
+
+    function selectTargetGroup(groupId) {
+      if (groupId === currentEvaluator) {
+        showToast('Nhóm không thể tự chấm điểm cho chính mình!', 'error');
+        return;
+      }
+      currentTargetGroup = groupId;
+      updateTargetGroupUI();
+
+      // Điền sẵn tên tác phẩm nếu đã từng nhập cho nhóm này
+      document.getElementById('work-title-input').value = groupWorks[groupId] || '';
+    }
+
+    function updateTargetGroupUI() {
+      const targetObj = GROUPS.find(g => g.id === currentTargetGroup);
+      if (targetObj) {
+        document.getElementById('desk-target-label').textContent = targetObj.shortName;
+        document.getElementById('mob-target-label').textContent = targetObj.shortName;
+      }
+
+      document.querySelectorAll('.target-btn').forEach(btn => {
+        const gId = btn.getAttribute('data-target');
+        const isDisabled = gId === currentEvaluator;
+        const isSelected = gId === currentTargetGroup;
+        const count = ballots.filter(b => b.targetGroup === gId).length;
+
+        const iconBox = btn.querySelector('.target-icon');
+        const subText = btn.querySelector('.target-sub');
+        const badge = btn.querySelector('.target-badge');
+
+        if (isDisabled) {
+          btn.disabled = true;
+          btn.className = 'target-btn min-h-[54px] px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-slate-400 text-left flex items-center justify-between gap-2 opacity-60 cursor-not-allowed';
+          iconBox.className = 'target-icon w-9 h-9 rounded-lg bg-slate-200 text-slate-400 flex items-center justify-center shrink-0';
+          subText.className = 'target-sub text-[11px] text-slate-400 truncate';
+          badge.className = 'target-badge text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-200 text-slate-500 shrink-0';
+          badge.textContent = 'Khóa tự chấm';
+        } else if (isSelected) {
+          btn.disabled = false;
+          btn.className = 'target-btn min-h-[54px] px-3.5 py-2.5 rounded-xl border-2 border-red-700 bg-red-50/70 text-red-950 text-left flex items-center justify-between gap-2 shadow-xs transition';
+          iconBox.className = 'target-icon w-9 h-9 rounded-lg bg-red-700 text-white flex items-center justify-center shrink-0';
+          subText.className = 'target-sub text-[11px] text-red-800/80 truncate';
+          badge.className = 'target-badge text-[11px] font-bold px-2 py-0.5 rounded-full bg-red-700 text-white shrink-0';
+          badge.textContent = `${count} phiếu`;
+        } else {
+          btn.disabled = false;
+          btn.className = 'target-btn min-h-[54px] px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 text-left flex items-center justify-between gap-2 transition';
+          iconBox.className = 'target-icon w-9 h-9 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0';
+          subText.className = 'target-sub text-[11px] text-slate-500 truncate';
+          badge.className = 'target-badge text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 shrink-0';
+          badge.textContent = `${count} phiếu`;
+        }
+      });
+    }
+
+    // 7. RENDER & XỬ LÝ THANH TRƯỢT + NÚT CỘNG/TRỪ 5 TIÊU CHÍ
+    function renderCriteriaSliders() {
+      const container = document.getElementById('criteria-sliders-container');
+      container.innerHTML = CRITERIA.map(c => `
+        <div class="bg-slate-50/80 p-3.5 sm:p-4 rounded-xl border border-slate-200/80">
+          <div class="flex items-start justify-between gap-2 mb-2">
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="bg-stone-800 text-white text-[11px] font-bold px-2 py-0.5 rounded">${c.code}</span>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-900">${c.name}</h3>
+              </div>
+              <p class="text-[11px] sm:text-xs text-slate-500 mt-1 leading-relaxed">${c.desc}</p>
+            </div>
+            <div class="text-right shrink-0 bg-white border border-slate-200 px-2.5 py-1 rounded-xl shadow-2xs">
+              <span id="val-${c.id}" class="text-lg sm:text-xl font-extrabold text-red-700">${c.defaultVal.toFixed(1)}</span>
+              <span class="text-xs font-semibold text-slate-400">/${c.max}</span>
+            </div>
+          </div>
+
+          <!-- Thanh trượt + Nút +/- 0.5 tối ưu ngón tay cái -->
+          <div class="flex items-center gap-2.5 mt-3">
+            <button type="button" onclick="adjustScore('${c.id}', -0.5)" aria-label="Giảm 0.5 điểm"
+              class="w-11 h-11 rounded-xl bg-white border border-slate-300 active:bg-slate-200 text-slate-800 font-extrabold text-lg flex items-center justify-center shrink-0 shadow-2xs select-none">
+              −
+            </button>
+            <div class="flex-1 px-1">
+              <input type="range" id="slider-${c.id}" min="0" max="${c.max}" step="0.5" value="${c.defaultVal}"
+                oninput="onSliderInput('${c.id}', this.value)">
+            </div>
+            <button type="button" onclick="adjustScore('${c.id}', 0.5)" aria-label="Tăng 0.5 điểm"
+              class="w-11 h-11 rounded-xl bg-white border border-slate-300 active:bg-slate-200 text-slate-800 font-extrabold text-lg flex items-center justify-center shrink-0 shadow-2xs select-none">
+              +
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function onSliderInput(critId, val) {
+      const numVal = parseFloat(val);
+      currentScores[critId] = numVal;
+      document.getElementById(`val-${critId}`).textContent = numVal.toFixed(1);
+      updateLiveTotal();
+    }
+
+    function adjustScore(critId, delta) {
+      const crit = CRITERIA.find(c => c.id === critId);
+      if (!crit) return;
+      let nextVal = (currentScores[critId] || 0) + delta;
+      nextVal = Math.max(0, Math.min(crit.max, nextVal));
+      nextVal = Math.round(nextVal * 2) / 2; // Đảm bảo bội số 0.5
+
+      currentScores[critId] = nextVal;
+      document.getElementById(`slider-${critId}`).value = nextVal;
+      document.getElementById(`val-${critId}`).textContent = nextVal.toFixed(1);
+      updateLiveTotal();
+    }
+
+    function resetSlidersToDefault(notify = true) {
+      CRITERIA.forEach(c => {
+        currentScores[c.id] = c.defaultVal;
+        const slider = document.getElementById(`slider-${c.id}`);
+        const label = document.getElementById(`val-${c.id}`);
+        if (slider) slider.value = c.defaultVal;
+        if (label) label.textContent = c.defaultVal.toFixed(1);
+      });
+      updateLiveTotal();
+      if (notify) showToast('Đã đặt lại điểm các tiêu chí về mức Tốt (80%)');
+    }
+
+    function updateLiveTotal() {
+      const total = CRITERIA.reduce((sum, c) => sum + (currentScores[c.id] || 0), 0);
+      const tenScale = (total / 10).toFixed(2);
+
+      document.getElementById('desk-live-total').textContent = total.toFixed(1);
+      document.getElementById('desk-live-ten').textContent = tenScale;
+      document.getElementById('mob-live-total').textContent = total.toFixed(1);
+      document.getElementById('mob-live-ten').textContent = tenScale;
+    }
+
+    // 8. LƯU PHIẾU CHẤM ĐIỂM
+    function submitBallot() {
+      if (currentEvaluator === currentTargetGroup) {
+        showToast('Nhóm không thể tự chấm điểm cho chính mình!', 'error');
+        return;
+      }
+
+      const workTitle = document.getElementById('work-title-input').value.trim();
+      const note = document.getElementById('ballot-note-input').value.trim();
+
+      if (workTitle) {
+        groupWorks[currentTargetGroup] = workTitle;
+      }
+
+      const total = CRITERIA.reduce((sum, c) => sum + (currentScores[c.id] || 0), 0);
+
+      const newBallot = {
+        id: 'B_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6),
+        timestamp: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+        evaluator: currentEvaluator,
+        targetGroup: currentTargetGroup,
+        scores: { ...currentScores },
+        total: total,
+        note: note
+      };
+
+      ballots.unshift(newBallot);
+      saveToStorage();
+      updateAllViews();
+
+      // Reset ghi chú và tự động chuyển sang nhóm tiếp theo để tiện chấm liên tục
+      document.getElementById('ballot-note-input').value = '';
+      const targetName = GROUPS.find(g => g.id === currentTargetGroup)?.shortName || '';
+      showToast(`Đã lưu phiếu chấm cho ${targetName} (${total.toFixed(1)} điểm)!`);
+
+      // Gợi ý chuyển sang nhóm tiếp theo hợp lệ
+      const currentIndex = GROUPS.findIndex(g => g.id === currentTargetGroup);
+      for (let i = 1; i <= GROUPS.length; i++) {
+        const nextGroup = GROUPS[(currentIndex + i) % GROUPS.length];
+        if (nextGroup.id !== currentEvaluator) {
+          selectTargetGroup(nextGroup.id);
+          break;
+        }
+      }
+    }
+
+    // 9. TÍNH TOÁN THỐNG KÊ ĐỘC LẬP & THUẬT TOÁN SINH NHẬN XÉT CHUYÊN MÔN
+    function computeGroupStats() {
+      return GROUPS.map(group => {
+        const groupBallots = ballots.filter(b => b.targetGroup === group.id);
+        const count = groupBallots.length;
+
+        if (count === 0) {
+          return {
+            ...group,
+            workTitle: groupWorks[group.id] || '',
+            count: 0,
+            avgCriteria: { tc1: 0, tc2: 0, tc3: 0, tc4: 0, tc5: 0 },
+            avgTotal: 0,
+            tenScale: 0,
+            rank: '-',
+            ratingLabel: 'Chưa chấm',
+            ratingBadgeClass: 'bg-slate-100 text-slate-600',
+            autoComment: 'Chưa có dữ liệu chấm điểm cho nhóm này. Hãy nhập phiếu chấm ở Tab "Chấm điểm" để hệ thống tự động tổng hợp và sinh nhận xét chuyên môn.',
+            notes: []
+          };
+        }
+
+        // Tính điểm trung bình có trọng số (nếu bật x2 cho GV)
+        let totalWeight = 0;
+        const weightedSums = { tc1: 0, tc2: 0, tc3: 0, tc4: 0, tc5: 0 };
+
+        groupBallots.forEach(b => {
+          const w = (teacherWeightX2 && b.evaluator === 'GV') ? 2 : 1;
+          totalWeight += w;
+          CRITERIA.forEach(c => {
+            weightedSums[c.id] += (b.scores[c.id] || 0) * w;
+          });
+        });
+
+        const avgCriteria = {};
+        let avgTotal = 0;
+        CRITERIA.forEach(c => {
+          const avg = weightedSums[c.id] / totalWeight;
+          avgCriteria[c.id] = avg;
+          avgTotal += avg;
+        });
+
+        const tenScale = avgTotal / 10;
+
+        // Xếp loại mức độ
+        let ratingLabel = '';
+        let ratingBadgeClass = '';
+        let overviewSentence = '';
+
+        if (avgTotal >= 86) {
+          ratingLabel = 'Xuất sắc';
+          ratingBadgeClass = 'bg-emerald-100 text-emerald-800 border border-emerald-200';
+          overviewSentence = `Sản phẩm chuyển thể đạt chất lượng xuất sắc (${avgTotal.toFixed(1)}/100 điểm), thể hiện tư duy thẩm mỹ sắc bén và sự hòa quyện nhuần nhuyễn giữa chất liệu văn học Thành phố Hồ Chí Minh với kỹ thuật STEAM.`;
+        } else if (avgTotal >= 71) {
+          ratingLabel = 'Tốt';
+          ratingBadgeClass = 'bg-blue-100 text-blue-800 border border-blue-200';
+          overviewSentence = `Sản phẩm hoàn thiện chỉn chu, đạt mức Tốt (${avgTotal.toFixed(1)}/100 điểm), giữ trọn tinh thần nguyên tác văn học TP.HCM và vận dụng hiệu quả các yếu tố kỹ thuật – nghệ thuật.`;
+        } else if (avgTotal >= 50) {
+          ratingLabel = 'Đạt';
+          ratingBadgeClass = 'bg-amber-100 text-amber-800 border border-amber-200';
+          overviewSentence = `Sản phẩm đạt yêu cầu cơ bản của chuyên đề thực hành chuyển thể (${avgTotal.toFixed(1)}/100 điểm), tuy nhiên nhóm cần đầu tư thêm chiều sâu sáng tạo và độ tinh xảo.`;
+        } else {
+          ratingLabel = 'Cần cố gắng';
+          ratingBadgeClass = 'bg-red-100 text-red-800 border border-red-200';
+          overviewSentence = `Sản phẩm còn sơ sài (${avgTotal.toFixed(1)}/100 điểm), nhóm cần bám sát nguyên tác văn học hơn và rà soát lại quy trình thiết kế kỹ thuật – nghệ thuật.`;
+        }
+
+        // Tìm tiêu chí mạnh nhất (% cao nhất) và tiêu chí cần cải thiện (% thấp nhất)
+        const ratios = CRITERIA.map(c => ({
+          ...c,
+          avg: avgCriteria[c.id],
+          pct: avgCriteria[c.id] / c.max
+        }));
+
+        ratios.sort((a, b) => b.pct - a.pct);
+        const strongest = ratios[0];
+        const weakest = ratios[ratios.length - 1];
+
+        let strengthText = strongest.strengthPhrase;
+        if (strongest.id === 'tc2') {
+          strengthText += group.artStrength;
+        }
+
+        let improveText = weakest.improvePhrase;
+        if (weakest.id === 'tc2') {
+          improveText += group.artImprove;
+        }
+
+        let autoComment = `${overviewSentence} Điểm sáng nổi bật của ${group.shortName} là ${strengthText} (${strongest.code}: ${strongest.avg.toFixed(1)}/${strongest.max}đ). Để sản phẩm hoàn hảo hơn khi trưng bày/lan tỏa trên Padlet lớp, nhóm cần lưu ý cải thiện thêm về ${improveText} (${weakest.code}: ${weakest.avg.toFixed(1)}/${weakest.max}đ).`;
+
+        const notes = groupBallots
+          .filter(b => b.note && b.note.trim().length > 0)
+          .map(b => `${getEvaluatorName(b.evaluator)}: "${b.note.trim()}"`);
+
+        return {
+          ...group,
+          workTitle: groupWorks[group.id] || '',
+          count,
+          avgCriteria,
+          avgTotal,
+          tenScale,
+          ratingLabel,
+          ratingBadgeClass,
+          autoComment,
+          notes
+        };
+      });
+    }
+
+    function getEvaluatorName(code) {
+      if (code === 'GV') return 'Giáo viên/BGK';
+      const g = GROUPS.find(item => item.id === code);
+      return g ? g.shortName : code;
+    }
+
+    // 10. CẬP NHẬT TOÀN BỘ GIAO DIỆN
+    function updateAllViews() {
+      document.getElementById('header-total-ballots').textContent = ballots.length;
+      document.getElementById('desk-history-count').textContent = ballots.length;
+      document.getElementById('mob-history-count').textContent = ballots.length;
+      updateTargetGroupUI();
+      renderResultsTab();
+      renderHistoryTab();
+    }
+
+    function renderResultsTab() {
+      const stats = computeGroupStats();
+
+      // Sắp xếp để tính thứ hạng (nhóm có điểm > 0 xếp trên)
+      const ranked = [...stats].sort((a, b) => {
+        if (a.count === 0 && b.count === 0) return 0;
+        if (a.count === 0) return 1;
+        if (b.count === 0) return -1;
+        return b.avgTotal - a.avgTotal;
+      });
+
+      ranked.forEach((item, idx) => {
+        item.rank = item.count > 0 ? idx + 1 : '-';
+      });
+
+      // Cập nhật thẻ tổng quan
+      document.getElementById('stat-total-ballots').textContent = ballots.length;
+      document.getElementById('stat-weight-info').textContent = teacherWeightX2
+        ? 'Đang áp dụng hệ số x2 cho điểm GV'
+        : 'Trung bình cộng tất cả phiếu chấm';
+
+      const leader = ranked[0];
+      if (leader && leader.count > 0) {
+        document.getElementById('stat-leading-group').textContent = leader.name;
+        document.getElementById('stat-leading-score').textContent = `${leader.avgTotal.toFixed(1)} / 100 điểm (${leader.tenScale.toFixed(2)}đ)`;
+      } else {
+        document.getElementById('stat-leading-group').textContent = 'Chưa có dữ liệu';
+        document.getElementById('stat-leading-score').textContent = '-- / 100 điểm';
+      }
+
+      // Render biểu đồ cột (theo thứ tự Nhóm 1 -> Nhóm 5)
+      const chartContainer = document.getElementById('bar-chart-container');
+      chartContainer.innerHTML = stats.map(g => {
+        const widthPct = g.count > 0 ? Math.min(100, Math.max(4, g.avgTotal)) : 0;
+        const barColor = g.avgTotal >= 86 ? 'bg-emerald-600' : (g.avgTotal >= 71 ? 'bg-red-700' : (g.avgTotal >= 50 ? 'bg-amber-500' : 'bg-slate-400'));
+        return `
+          <div>
+            <div class="flex items-center justify-between text-xs mb-1">
+              <span class="font-bold text-slate-800 truncate pr-2">${g.name}</span>
+              <span class="font-extrabold text-slate-900 shrink-0">
+                ${g.count > 0 ? `${g.avgTotal.toFixed(1)}đ <span class="text-slate-400 font-normal">(${g.tenScale.toFixed(2)})</span>` : 'Chưa chấm'}
+              </span>
+            </div>
+            <div class="w-full h-3.5 bg-slate-100 rounded-full overflow-hidden">
+              <div class="${barColor} h-full rounded-full transition-all duration-500" style="width: ${widthPct}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Render thẻ kết quả chi tiết từng nhóm (theo thứ tự xếp hạng)
+      const cardsContainer = document.getElementById('group-results-cards');
+      cardsContainer.innerHTML = ranked.map(g => {
+        const rankBadge = g.rank === 1
+          ? '<span class="bg-amber-400 text-stone-950 text-xs font-extrabold px-2.5 py-1 rounded-lg"><i class="fa-solid fa-crown mr-1"></i>HẠNG 1</span>'
+          : (g.rank !== '-'
+            ? `<span class="bg-stone-800 text-white text-xs font-bold px-2.5 py-1 rounded-lg">HẠNG ${g.rank}</span>`
+            : '<span class="bg-slate-200 text-slate-600 text-xs font-bold px-2.5 py-1 rounded-lg">CHƯA XẾP HẠNG</span>');
+
+        const notesHtml = g.notes.length > 0
+          ? `<div class="mt-2.5 pt-2.5 border-t border-slate-200/70">
+              <p class="text-[11px] font-bold text-slate-500 uppercase mb-1">Ghi chú từ người chấm:</p>
+              <ul class="text-xs text-slate-600 space-y-1 list-disc list-inside">
+                ${g.notes.map(n => `<li>${escapeHTML(n)}</li>`).join('')}
+              </ul>
+            </div>`
+          : '';
+
+        return `
+          <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200">
+            <div class="flex flex-wrap items-start justify-between gap-2 pb-3 border-b border-slate-100">
+              <div>
+                <div class="flex items-center gap-2 flex-wrap">
+                  ${rankBadge}
+                  <span class="text-xs font-bold px-2.5 py-1 rounded-lg ${g.ratingBadgeClass}">${g.ratingLabel}</span>
+                  <span class="text-xs text-slate-500 font-medium">(${g.count} lượt chấm)</span>
+                </div>
+                <h3 class="text-base sm:text-lg font-extrabold text-slate-900 mt-2">${g.name}</h3>
+                ${g.workTitle ? `<p class="text-xs font-semibold text-red-700 mt-0.5"><i class="fa-solid fa-book-open mr-1"></i>Tác phẩm: ${escapeHTML(g.workTitle)}</p>` : ''}
+              </div>
+
+              <div class="text-right bg-slate-50 px-3 py-2 rounded-xl border border-slate-200">
+                <p class="text-[11px] text-slate-500 font-semibold">Điểm trung bình</p>
+                <p class="text-2xl font-extrabold text-red-700 leading-tight">${g.count > 0 ? g.avgTotal.toFixed(1) : '--'}<span class="text-xs text-slate-400 font-normal">/100</span></p>
+                <p class="text-xs font-bold text-emerald-700">Thang 10: ${g.count > 0 ? g.tenScale.toFixed(2) : '--'}</p>
+              </div>
+            </div>
+
+            <!-- Điểm thành phần 5 tiêu chí -->
+            <div class="grid grid-cols-5 gap-1.5 my-3 text-center">
+              ${CRITERIA.map(c => `
+                <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
+                  <p class="text-[11px] font-bold text-slate-500">${c.code}</p>
+                  <p class="text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5">${g.count > 0 ? g.avgCriteria[c.id].toFixed(1) : '-'}</p>
+                  <p class="text-[10px] text-slate-400">/${c.max}</p>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Khung Nhận xét tự động -->
+            <div class="bg-amber-50/70 border border-amber-200/80 rounded-xl p-3.5">
+              <div class="flex items-center justify-between gap-2 mb-1.5">
+                <span class="text-xs font-extrabold text-amber-950 flex items-center gap-1.5">
+                  <i class="fa-solid fa-robot text-amber-700"></i> NHẬN XÉT CHUYÊN MÔN TỰ ĐỘNG
+                </span>
+                <button type="button" onclick="copyComment('${g.id}')" class="min-h-[34px] px-3 py-1 bg-white hover:bg-amber-100 active:scale-95 text-amber-900 border border-amber-300 rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-2xs transition">
+                  <i class="fa-regular fa-copy"></i> Sao chép
+                </button>
+              </div>
+              <p id="comment-text-${g.id}" class="text-xs sm:text-sm text-slate-800 leading-relaxed">${g.autoComment}</p>
+              ${notesHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 11. RENDER TAB LỊCH SỬ PHIẾU CHẤM
+    function renderHistoryTab() {
+      document.getElementById('history-badge-count').textContent = `${ballots.length} phiếu`;
+      const container = document.getElementById('history-list-container');
+
+      if (ballots.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl p-8 text-center border border-slate-200">
+            <i class="fa-regular fa-folder-open text-3xl text-slate-300 mb-2"></i>
+            <p class="text-sm font-semibold text-slate-600">Chưa có phiếu chấm nào được lưu</p>
+            <p class="text-xs text-slate-400 mt-1">Chuyển sang tab "Chấm điểm" để bắt đầu đánh giá các nhóm.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = ballots.map(b => {
+        const targetObj = GROUPS.find(g => g.id === b.targetGroup);
+        const isTeacher = b.evaluator === 'GV';
+        return `
+          <div class="bg-white rounded-2xl p-3.5 sm:p-4 shadow-sm border border-slate-200 flex items-center justify-between gap-3">
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-xs font-bold px-2 py-0.5 rounded-md ${isTeacher ? 'bg-red-100 text-red-800' : 'bg-slate-100 text-slate-700'}">
+                  ${getEvaluatorName(b.evaluator)}
+                </span>
+                <i class="fa-solid fa-arrow-right text-[10px] text-slate-400"></i>
+                <span class="text-xs sm:text-sm font-extrabold text-slate-900 truncate">
+                  ${targetObj ? targetObj.name : b.targetGroup}
+                </span>
+                <span class="text-[11px] text-slate-400">(${b.timestamp})</span>
+              </div>
+              <p class="text-xs text-slate-600 mt-1.5">
+                TC1: <b>${b.scores.tc1}</b> • TC2: <b>${b.scores.tc2}</b> • TC3: <b>${b.scores.tc3}</b> • TC4: <b>${b.scores.tc4}</b> • TC5: <b>${b.scores.tc5}</b>
+              </p>
+              ${b.note ? `<p class="text-xs text-slate-500 italic mt-1 truncate">"${escapeHTML(b.note)}"</p>` : ''}
+            </div>
+
+            <div class="flex items-center gap-2.5 shrink-0">
+              <div class="text-right">
+                <span class="text-lg font-extrabold text-red-700">${b.total.toFixed(1)}</span>
+                <span class="text-[11px] text-slate-400 block">điểm</span>
+              </div>
+              <button type="button" onclick="deleteSingleBallot('${b.id}')" aria-label="Xóa phiếu này"
+                class="w-10 h-10 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 flex items-center justify-center transition">
+                <i class="fa-solid fa-trash-can text-sm"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function deleteSingleBallot(ballotId) {
+      ballots = ballots.filter(b => b.id !== ballotId);
+      saveToStorage();
+      updateAllViews();
+      showToast('Đã xóa phiếu chấm đã chọn');
+    }
+
+    // 12. SAO CHÉP NHẬN XÉT (TƯƠNG THÍCH IFRAME & ĐIỆN THOẠI)
+    function copyComment(groupId) {
+      const stats = computeGroupStats().find(g => g.id === groupId);
+      if (!stats) return;
+
+      const fullText = `${stats.name.toUpperCase()}${stats.workTitle ? ` (${stats.workTitle})` : ''} – Điểm TB: ${stats.avgTotal.toFixed(1)}/100 (Thang 10: ${stats.tenScale.toFixed(2)}) – Xếp loại: ${stats.ratingLabel}.\nNhận xét: ${stats.autoComment}`;
+
+      const tempInput = document.createElement('textarea');
+      tempInput.value = fullText;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      try {
+        document.execCommand('copy');
+        showToast(`Đã sao chép nhận xét của ${stats.shortName}!`);
+      } catch (err) {
+        showToast('Không thể sao chép tự động, vui lòng bôi đen văn bản.', 'error');
+      }
+      document.body.removeChild(tempInput);
+    }
+
+    // 13. XUẤT FILE CSV (EXCEL TIẾNG VIỆT CÓ BOM UTF-8)
+    function exportToCSV() {
+      if (ballots.length === 0) {
+        showToast('Chưa có dữ liệu phiếu chấm để xuất file!', 'error');
+        return;
+      }
+
+      const stats = computeGroupStats().sort((a, b) => b.avgTotal - a.avgTotal);
+      let csv = '\uFEFF'; // BOM UTF-8 để Excel hiển thị chuẩn tiếng Việt
+      csv += 'BẢNG TỔNG HỢP KẾT QUẢ CHẤM ĐIỂM DỰ ÁN STEAM NGỮ VĂN 12 – LỚP 12A17\n';
+      csv += 'Hạng,Tên Nhóm,Loại hình,Tác phẩm TP.HCM,Số phiếu,TB TC1 (35đ),TB TC2 (30đ),TB TC3 (15đ),TB TC4 (10đ),TB TC5 (10đ),Tổng TB (100đ),Quy đổi Thang 10,Xếp loại,Nhận xét chuyên môn tự động\n';
+
+      stats.forEach((g, idx) => {
+        const rank = g.count > 0 ? idx + 1 : '';
+        const row = [
+          rank,
+          `"${g.name}"`,
+          `"${g.type}"`,
+          `"${(g.workTitle || '').replace(/"/g, '""')}"`,
+          g.count,
+          g.avgCriteria.tc1.toFixed(2),
+          g.avgCriteria.tc2.toFixed(2),
+          g.avgCriteria.tc3.toFixed(2),
+          g.avgCriteria.tc4.toFixed(2),
+          g.avgCriteria.tc5.toFixed(2),
+          g.avgTotal.toFixed(2),
+          g.tenScale.toFixed(2),
+          `"${g.ratingLabel}"`,
+          `"${g.autoComment.replace(/"/g, '""')}"`
+        ];
+        csv += row.join(',') + '\n';
+      });
+
+      csv += '\nCHI TIẾT TỪNG PHIẾU CHẤM ĐỘC LẬP\n';
+      csv += 'Thời gian,Người chấm,Nhóm được chấm,TC1 (35),TC2 (30),TC3 (15),TC4 (10),TC5 (10),Tổng điểm,Ghi chú\n';
+      ballots.forEach(b => {
+        const gObj = GROUPS.find(g => g.id === b.targetGroup);
+        const row = [
+          `"${b.timestamp}"`,
+          `"${getEvaluatorName(b.evaluator)}"`,
+          `"${gObj ? gObj.name : b.targetGroup}"`,
+          b.scores.tc1,
+          b.scores.tc2,
+          b.scores.tc3,
+          b.scores.tc4,
+          b.scores.tc5,
+          b.total,
+          `"${(b.note || '').replace(/"/g, '""')}"`
+        ];
+        csv += row.join(',') + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'Ket_Qua_Cham_Diem_STEAM_12A17.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      showToast('Đã tải xuống file Excel (CSV) thành công!');
+    }
+
+    // 14. HỘP THOẠI XÁC NHẬN DỮ LIỆU DEMO / XÓA DỮ LIỆU
+    function openConfirmModal(actionType) {
+      pendingModalAction = actionType;
+      const modal = document.getElementById('custom-modal');
+      const title = document.getElementById('modal-title');
+      const msg = document.getElementById('modal-message');
+      const btn = document.getElementById('modal-confirm-btn');
+
+      if (actionType === 'demo') {
+        title.textContent = 'Nạp dữ liệu chấm điểm mẫu?';
+        msg.textContent = 'Hệ thống sẽ tạo sẵn các phiếu chấm mẫu từ Giáo viên và 05 nhóm lớp 12A17 để thầy trải nghiệm bảng xếp hạng và nhận xét AI.';
+        btn.className = 'min-h-[44px] px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-sm font-bold';
+        btn.textContent = 'Nạp dữ liệu mẫu';
+      } else {
+        title.textContent = 'Xóa toàn bộ phiếu chấm?';
+        msg.textContent = 'Tất cả dữ liệu điểm số và nhận xét đã lưu trên thiết bị này sẽ bị xóa sạch để bắt đầu buổi chấm mới.';
+        btn.className = 'min-h-[44px] px-4 py-2 rounded-xl bg-red-700 hover:bg-red-600 text-white text-sm font-bold';
+        btn.textContent = 'Xóa tất cả';
+      }
+
+      btn.onclick = executeModalAction;
+      modal.classList.remove('hidden');
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('custom-modal').classList.add('hidden');
+      pendingModalAction = null;
+    }
+
+    function executeModalAction() {
+      if (pendingModalAction === 'demo') {
+        loadDemoData();
+      } else if (pendingModalAction === 'clear') {
+        ballots = [];
+        groupWorks = {};
+        document.getElementById('work-title-input').value = '';
+        saveToStorage();
+        updateAllViews();
+        showToast('Đã xóa toàn bộ dữ liệu phiếu chấm');
+      }
+      closeConfirmModal();
+    }
+
+    function loadDemoData() {
+      groupWorks = {
+        G1: 'Bông áo cưới (Bình Nguyên Lộc)',
+        G2: 'Mùa len trâu (Sơn Nam)',
+        G3: 'Người Sài Gòn (Nguyễn Thị Minh Ngọc)',
+        G4: 'Cánh đồng bất tận (Nguyễn Ngọc Tư)',
+        G5: 'Kính vạn hoa (Nguyễn Nhật Ánh)'
+      };
+
+      ballots = [
+        { id: 'D1', timestamp: '08:15', evaluator: 'GV', targetGroup: 'G2', scores: { tc1: 32, tc2: 28, tc3: 14, tc4: 9, tc5: 9 }, total: 92, note: 'Rối bóng tạo hiệu ứng sông nước Nam Bộ rất ấn tượng.' },
+        { id: 'D2', timestamp: '08:16', evaluator: 'G1', targetGroup: 'G2', scores: { tc1: 31, tc2: 27, tc3: 13, tc4: 9, tc5: 9 }, total: 89, note: '' },
+        { id: 'D3', timestamp: '08:25', evaluator: 'GV', targetGroup: 'G4', scores: { tc1: 31, tc2: 26, tc3: 13, tc4: 9, tc5: 8.5 }, total: 87.5, note: 'Diễn xuất nhập vai, phối hợp ca múa mượt mà.' },
+        { id: 'D4', timestamp: '08:26', evaluator: 'G3', targetGroup: 'G4', scores: { tc1: 30, tc2: 25.5, tc3: 12.5, tc4: 8.5, tc5: 8.5 }, total: 85, note: '' },
+        { id: 'D5', timestamp: '08:35', evaluator: 'GV', targetGroup: 'G3', scores: { tc1: 29, tc2: 26, tc3: 13.5, tc4: 8, tc5: 8.5 }, total: 85, note: 'Sa bàn tỷ lệ chuẩn, đèn LED đẹp.' },
+        { id: 'D6', timestamp: '08:42', evaluator: 'GV', targetGroup: 'G5', scores: { tc1: 28.5, tc2: 24.5, tc3: 12, tc4: 8.5, tc5: 8 }, total: 81.5, note: 'Không khí học đường Sài Gòn vui tươi, gần gũi.' },
+        { id: 'D7', timestamp: '08:50', evaluator: 'GV', targetGroup: 'G1', scores: { tc1: 27, tc2: 23, tc3: 11.5, tc4: 8, tc5: 8 }, total: 77.5, note: 'Bố cục tranh hài hòa, cần nhấn thêm chi tiết bối cảnh.' }
+      ];
+
+      document.getElementById('work-title-input').value = groupWorks[currentTargetGroup] || '';
+      saveToStorage();
+      updateAllViews();
+      showToast('Đã nạp dữ liệu mẫu thành công!');
+    }
+
+    // 15. TIỆN ÍCH HIỂN THỊ TOAST & BẢO MẬT HTML
+    let toastTimer = null;
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast-notification');
+      const icon = document.getElementById('toast-icon');
+      const text = document.getElementById('toast-text');
+
+      text.textContent = message;
+      if (type === 'error') {
+        icon.className = 'fa-solid fa-circle-exclamation text-amber-400 text-base';
+      } else {
+        icon.className = 'fa-solid fa-circle-check text-emerald-400 text-base';
+      }
+
+      toast.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2800);
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag]));
+    }
+  </script>
+</body>
+</html>
